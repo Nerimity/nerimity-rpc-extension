@@ -1,14 +1,15 @@
 const PORT_RANGES = [6463, 6472];
 
 export class WebSocketRPC {
-  constructor() {
+  constructor(appId) {
     this.ws = null;
     this.greeted = false;
     this.greetedTimeoutId = null;
+    this.appId = appId;
   }
   connect(port = PORT_RANGES[0]) {
     console.log("Connecting to port " + port);
-    this.ws = new WebSocket(`ws://localhost:${port}`);
+    this.ws = new WebSocket(`ws://localhost:${port}?appId=${this.appId}`);
 
     this.ws.onopen = () => {
       console.log("Connected!");

@@ -1,4 +1,3 @@
-debugger;
 const throttleFunction = (func, delay) => {
     let prev = 0;
     return (...args) => {
@@ -97,7 +96,7 @@ class Spotify {
 
 const main = async () => {
     const {WebSocketRPC} = await import("./WebSocketRPC.js");
-    const rpc = new WebSocketRPC();
+    const rpc = new WebSocketRPC("1477289858211946496");
     rpc.connect();
 
     const readyWidget = await spotifyReady()
