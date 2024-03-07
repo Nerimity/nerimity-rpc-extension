@@ -1,0 +1,14 @@
+{
+    "manifest_version": 3,
+   
+    "name": "Nerimity RPC",
+    "version": "0.1.1",
+    "description": "Get rich presence from Nerimity. Show what you're doing on Nerimity!",
+    "content_scripts": [{
+      "js": ["content.js"],
+      "matches": [
+        "https://open.spotify.com/*"
+      ]
+    }]
+   
+  }
