@@ -4,6 +4,16 @@
     "name": "Nerimity RPC",
     "version": "0.1.1",
     "description": "Get rich presence from Nerimity. Show what you're doing on Nerimity!",
+
+
+    "web_accessible_resources": [{
+      "matches": [
+        "https://open.spotify.com/*"
+      ],
+      "resources": ["WebSocketRPC.js"]
+    }],
+
+    
     "content_scripts": [{
       "js": ["content.js"],
       "matches": [
