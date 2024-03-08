@@ -30,38 +30,54 @@ const spotifyReady = async () => {
 
 class Spotify {
     constructor(widgetEl) {
+        debugger;
         this.checkForChanges()
         const playButtonEl = document.querySelector("[data-testid=control-button-playpause]")
+        const playbackBarEl = document.querySelector(".playback-bar");
+        const playbackPosEl = document.querySelector("[data-testid=playback-position]");
 
         const linkChangeObserver = new MutationObserver(throttleFunction(() => {
             this.checkForChanges()
         }, 10));
         
+        let prevPosition = hmsToMilliseconds(playbackPosEl.textContent);
+        const playbackPosObserver = new MutationObserver(throttleFunction((mutations) => {
+            if (mutations[0].attributeName === "data-test-position") {
+                const newPosition = hmsToMilliseconds(playbackPosEl.textContent);
+                const difference = Math.abs(newPosition - prevPosition);
+                prevPosition = newPosition;
+                if (difference > 1400) {
+                    this.checkForChanges(true);
+                }
+            }
+        }, 10));
+        
         linkChangeObserver.observe(widgetEl, {subtree: true, attributes: true, childList: true});
         linkChangeObserver.observe(playButtonEl, {subtree: true, attributes: true, childList: true});
+        playbackPosObserver.observe(playbackBarEl, {subtree: true, attributes: true, childList: false});
 
         this.beforePlaying = null;
 
-        // document.querySelector("[data-testid=playback-progressbar]").addEventListener("click", () => {
-        //     console.log("yay")
-        // })
-
         this.events = {};
     }
-    async checkForChanges() {
+    async checkForChanges(seeked = false) {
+        await sleep(100);
         const before = !this.beforePlaying ? undefined : {...this.beforePlaying};
         this.beforePlaying = this.getPlayingTrack();
+
+        
 
         if (before?.title + before?.artists !== this.beforePlaying?.title + this.beforePlaying?.artists) {
             if (!this.beforePlaying.isPlaying) return;
             this.emit("linkChanged", this.beforePlaying)
             return;
         }
-        if (before?.isPlaying !== this.beforePlaying.isPlaying) {
+        if (before?.isPlaying !== this.beforePlaying.isPlaying || seeked) {
             this.emit("isPlayingChanged", this.beforePlaying)
         }
     }
     getPlayingTrack() {
+
         const titleEl = document.querySelector("[data-testid=context-item-link")
         const artists = document.querySelector("[data-testid=context-item-info-subtitles]")
         const albumArt = document.querySelector("[data-testid=cover-art-image]")
@@ -96,7 +112,7 @@ class Spotify {
 
 const main = async () => {
     const {WebSocketRPC} = await import("./WebSocketRPC.js");
-    const rpc = new WebSocketRPC("1477289858211946496");
+    const rpc = new WebSocketRPC("1474356730912743424");
     rpc.connect();
 
     const readyWidget = await spotifyReady()
@@ -108,6 +124,9 @@ const main = async () => {
             action: "Listening to",
             imgSrc: data.art,
             title: data.title,
+            subtitle: data.artists,
+            startedAt: Date.now() - hmsToMilliseconds(data.position),
+            endsAt: (Date.now() - hmsToMilliseconds(data.position)) + hmsToMilliseconds(data.duration),
         })
     })
     spotify.on("isPlayingChanged", (data) => {
@@ -117,6 +136,10 @@ const main = async () => {
                 action: "Listening to",
                 imgSrc: data.art,
                 title: data.title,
+                subtitle: data.artists,
+                startedAt: Date.now() - hmsToMilliseconds(data.position),
+                endsAt: (Date.now() - hmsToMilliseconds(data.position)) + hmsToMilliseconds(data.duration),
+
             }) 
         } else {
             rpc.request(undefined)
@@ -126,3 +149,17 @@ const main = async () => {
     
 }
 main();
+
+
+function hmsToMilliseconds(str) {
+    const p = str.split(':');
+    let ms = 0;
+    let multiplier = 1;
+  
+    while (p.length > 0) {
+      ms += multiplier * parseInt(p.pop(), 10) * 1000;
+      multiplier *= 60;
+    }
+  
+    return ms;
+  }
