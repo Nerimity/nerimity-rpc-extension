@@ -30,7 +30,6 @@ const spotifyReady = async () => {
 
 class Spotify {
     constructor(widgetEl) {
-        debugger;
         this.checkForChanges()
         const playButtonEl = document.querySelector("[data-testid=control-button-playpause]")
         const playbackBarEl = document.querySelector(".playback-bar");
