@@ -64,7 +64,7 @@ class Spotify {
         const before = !this.beforePlaying ? undefined : {...this.beforePlaying};
         this.beforePlaying = this.getPlayingTrack();
 
-        
+        if (!before) return;
 
         if (before?.title + before?.artists !== this.beforePlaying?.title + this.beforePlaying?.artists) {
             if (!this.beforePlaying.isPlaying) return;
@@ -112,12 +112,13 @@ class Spotify {
 const main = async () => {
     const {WebSocketRPC} = await import("./WebSocketRPC.js");
     const rpc = new WebSocketRPC("1474356730912743424");
+    const readyWidget = await spotifyReady()
+
+    const spotify = new Spotify(readyWidget);
     rpc.connect();
 
-    const readyWidget = await spotifyReady()
-    const spotify = new Spotify(readyWidget);
 
-    spotify.on("linkChanged", (data) => {
+    const makeRequest = (data) => {
         rpc.request({
             name: "Spotify",
             action: "Listening to",
@@ -127,19 +128,21 @@ const main = async () => {
             startedAt: Date.now() - hmsToMilliseconds(data.position),
             endsAt: (Date.now() - hmsToMilliseconds(data.position)) + hmsToMilliseconds(data.duration),
         })
+    }
+
+    rpc.on("ready", () => {
+        const data = spotify.getPlayingTrack();
+        if (!data || !data.isPlaying) return;
+        makeRequest(data);
     })
+
+    spotify.on("linkChanged", (data) => {
+        makeRequest(data);
+    })
+
     spotify.on("isPlayingChanged", (data) => {
         if (data.isPlaying) {
-            rpc.request({
-                name: "Spotify",
-                action: "Listening to",
-                imgSrc: data.art,
-                title: data.title,
-                subtitle: data.artists,
-                startedAt: Date.now() - hmsToMilliseconds(data.position),
-                endsAt: (Date.now() - hmsToMilliseconds(data.position)) + hmsToMilliseconds(data.duration),
-
-            }) 
+            makeRequest(data);
         } else {
             rpc.request(undefined)
         }
