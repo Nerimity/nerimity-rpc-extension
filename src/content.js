@@ -111,7 +111,7 @@ class Spotify {
 
 const main = async () => {
     const {WebSocketRPC} = await import("./WebSocketRPC.js");
-    const rpc = new WebSocketRPC("1474356730912743424");
+    const rpc = new WebSocketRPC("1484242629762916352");
     const readyWidget = await spotifyReady()
 
     const spotify = new Spotify(readyWidget);
