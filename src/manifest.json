@@ -1,25 +1,35 @@
 {
-    "manifest_version": 3,
-   
-    "name": "Nerimity RPC",
-    "version": "0.1.1",
-    "description": "Get rich presence from Nerimity. Show what you're doing on Nerimity!",
+  "manifest_version": 3,
 
+  "name": "Nerimity RPC",
+  "version": "0.1.1",
+  "description": "Get rich presence from Nerimity. Show what you're doing on Nerimity!",
 
-    "web_accessible_resources": [{
-      "matches": [
-        "https://open.spotify.com/*"
-      ],
-      "resources": ["WebSocketRPC.js"]
-    }],
+  "web_accessible_resources": [
+    {
+      "matches": ["https://open.spotify.com/*", "https://*.youtube.com/*"],
+      "resources": [
+        "WebSocketRPC.js",
+        "utils.js",
+        "spotify.js"
+      ]
+    },
+    {
+      "matches": ["https://open.spotify.com/*", "https://*.youtube.com/*"],
+      "resources": [
+        "WebSocketRPC.js",
+        "utils.js",
+        "youtube.js",
+        "youtube_inject.js"
+      ]
+    }
+  ],
 
-    
-    "content_scripts": [{
+  "content_scripts": [
+    {
       "js": ["content.js"],
       "run_at": "document_start",
-      "matches": [
-        "https://open.spotify.com/*"
-      ]
-    }]
-   
-  }
+      "matches": ["https://open.spotify.com/*", "https://*.youtube.com/*"]
+    }
+  ]
+}
