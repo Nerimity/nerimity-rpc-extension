@@ -1,4 +1,4 @@
-
+const hasFocus = document.hasFocus();
 const main = async () => {
   const {sleep} = await import("./utils.js");
 
@@ -10,14 +10,15 @@ const main = async () => {
     const video = document.querySelector("video");
 
 
-    video.onplay = () => {
+    video.onplaying = () => {
       sendData(video, details, "play")
     }
     video.onpause = () => {
       sendData(video, details, "paused")
     }
-    sendData(video, details, "play")
-    
+    if (hasFocus) {
+      sendData(video, details, "play")
+    }
 
   })
 
