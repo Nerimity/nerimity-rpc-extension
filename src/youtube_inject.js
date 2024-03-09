@@ -1,6 +1,24 @@
 const hasFocus = document.hasFocus();
+
+
+
+
+
 const main = async () => {
   const {sleep} = await import("./utils.js");
+
+  if (!hasFocus) {
+
+    window.addEventListener("focus", async () => {
+      const details = await getPlayerDetails();
+      if (!details) return;
+      
+      const video = document.querySelector("video");
+  
+      sendData(video, details, "play")
+    }, {once: true})
+  }
+
 
   document.addEventListener("yt-player-updated", async (event) => {
 
@@ -18,7 +36,8 @@ const main = async () => {
     }
     if (hasFocus) {
       sendData(video, details, "play")
-    }
+    } 
+    
 
   })
 
@@ -87,10 +106,9 @@ const getOEmbedJSON = async videoId => {
   }
   const response = await fetch("https://www.youtube.com/oembed?url=http%3A//youtube.com/watch%3Fv%3D" + videoId + "&format=json");
   if (!response.ok) {
-      return null;
+    return null;
   }
   const data = await response.json();
-
 
   const res = {
     title: data.title,
