@@ -124,6 +124,7 @@ const main = async () => {
             action: "Listening to",
             imgSrc: data.art,
             title: data.title,
+            link: data.link,
             subtitle: data.artists,
             startedAt: Date.now() - hmsToMilliseconds(data.position),
             endsAt: (Date.now() - hmsToMilliseconds(data.position)) + hmsToMilliseconds(data.duration),
