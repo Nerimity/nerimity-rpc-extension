@@ -55,7 +55,6 @@ const main = async () => {
   window.addEventListener("SendToLoader", function (message) {
     makeRequest(message.detail);
     lastData = message.detail;  
-    console.log(lastData)
   })
 }
 main();

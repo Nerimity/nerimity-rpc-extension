@@ -1,90 +1,87 @@
-const hasFocus = document.hasFocus();
-
-
-
-
-
 const main = async () => {
+  console.log("Nerimity RPC extension Injected!");
+
   const {sleep} = await import("./utils.js");
 
-  if (!hasFocus) {
+  const videoElement = () => document.querySelector("video");
+  const moviePlayerElement = () => document.getElementById("movie_player");
+  const isPlayerVisible = () => !moviePlayerElement() ? false : isVisible(moviePlayerElement())
 
-    window.addEventListener("focus", async () => {
+  const isAdShowing = () => document.getElementsByClassName('ad-showing').length;
+
+
+  let lastVisibleState = false;
+
+  setInterval(() => {
+    const isVisible = isAdShowing() ? false : isPlayerVisible();
+    if (lastVisibleState === isVisible) return;
+    lastVisibleState = isVisible;
+    if (isVisible) return handleRPC();
+    dispatchEvent({paused: true});
+  }, 1000)
+
+
+
+  const handleRPC = async () => {
+    const videoEl = videoElement();
+    if (!videoEl) return;
+    
+    const makeEvent = async () => {
       const details = await getPlayerDetails();
-      if (!details) return;
-      
-      const video = document.querySelector("video");
-  
-      sendData(video, details, "play")
-    }, {once: true})
+      return {
+        currentTime: Math.round(videoEl.currentTime),
+        duration: Math.round(videoEl.duration),
+        ...details, 
+        paused: videoEl.paused
+      }
+    }
+
+    videoEl.onpause = () => {
+      dispatchEvent({paused: true});
+    }
+
+    videoEl.onplaying = async () => {
+      dispatchEvent(await makeEvent());
+    }
+    dispatchEvent(await makeEvent());
   }
 
 
-  document.addEventListener("yt-player-updated", async (event) => {
 
-    const details = await getPlayerDetails();
-    if (!details) return;
-    
-    const video = document.querySelector("video");
-
-
-    video.onplaying = () => {
-      sendData(video, details, "play")
-    }
-    video.onpause = () => {
-      sendData(video, details, "paused")
-    }
-    if (hasFocus) {
-      sendData(video, details, "play")
-    } 
-    
-
-  })
-
-  const sendData = (videoEl, details, name) => {
-    const messageEvent = new CustomEvent("SendToLoader", { 
-      detail: {
-      currentTime: Math.round(videoEl.currentTime),
-      duration: Math.round(videoEl.duration),
-      name,
-      ...details, 
-      paused: videoEl.paused
-    }
-  });
-    window.dispatchEvent(messageEvent);
-  }
-  
-
-  let isRunning = false
-  
   const getPlayerDetails = async () => {
-    if (isRunning) return;
-    isRunning = true;
     const videoUrl = document.getElementById("movie_player")?.getVideoUrl?.();
     if (!videoUrl) {
-      console.log("video not found, trying again")
       await sleep(1000);
       return getPlayerDetails();
     }
     const videoId = videoUrl.split("v=")[1]
-    isRunning = false;
 
-    const ogDetails = await getOEmbedJSON(videoId)
+    const ogDetails = await getOEmbedJSON(videoId);
+
+    if (!ogDetails) {
+      return;
+    }
+
+    if (!lastVisibleState) {
+      return;
+    }
 
 
     const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`
-  
-  
-    return {
+
+    const res = {
       channelName: ogDetails.authorName,
       title: ogDetails.title,
       thumbnailUrl,
       url: "https://www.youtube.com/watch?v=" + videoId
     }
-
+  
+    return res;
   }
+
   
 }
+
 
 
 
@@ -120,5 +117,16 @@ const getOEmbedJSON = async videoId => {
 
   return res;
 }
+
+
+const dispatchEvent = (detail) => {
+  const messageEvent = new CustomEvent("SendToLoader", {detail});
+  window.dispatchEvent(messageEvent);
+}
+
+function isVisible(element) {
+  return element && element.offsetWidth > 0 && element.offsetHeight > 0;
+}
+
 
 main();
