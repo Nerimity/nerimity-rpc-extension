@@ -1,5 +1,5 @@
 const main = async () => {
-  console.log("Nerimity RPC extension Injected!");
+  // console.log("Nerimity RPC extension Injected!");
 
   const {sleep} = await import("./utils.js");
 

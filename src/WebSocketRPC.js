@@ -9,6 +9,9 @@ export class WebSocketRPC {
 
     this.queuedForReconnect = false;
     this.events = {};
+
+    this.maxRetryCount = 2;
+    this.retryCount = 0;
   }
   connect(port = PORT_RANGES[0]) {
     console.log("Connecting to port " + port);
@@ -17,7 +20,9 @@ export class WebSocketRPC {
     this.ws.onopen = () => {
       console.log("Connected!");
       this.greetedTimeoutId = setTimeout(() => {
-        this.tryNextPort(port);
+        try {
+          this.ws.close();
+        } catch {}
       }, 2000);
     };
 
@@ -25,6 +30,7 @@ export class WebSocketRPC {
       const payload = safeParseJson(event.data);
       if (!payload) return this.tryNextPort(port);
       if (payload.name === "HELLO_NERIMITY_RPC") {
+        this.retryCount = 0;
         clearTimeout(this.greetedTimeoutId);
         this.greeted = true;
         this.ws.send(JSON.stringify({ name: "HELLO_NERIMITY_RPC" }));
@@ -38,9 +44,6 @@ export class WebSocketRPC {
     this.ws.onclose = (event) => {
       this.tryNextPort(port);
     }
-    this.ws.onerror = () => {
-      this.tryNextPort(port);
-    };
   }
   tryNextPort(currentPort) {
     if (this.queuedForReconnect) return;
@@ -50,11 +53,16 @@ export class WebSocketRPC {
         this.ws.close();
       } catch {}
       if (currentPort >= PORT_RANGES[1]) {
-        console.log("Failed all ports. Trying again in 2 seconds...");
+        if (this.retryCount >= this.maxRetryCount) {
+          console.log("Failed all ports. Giving up.");
+          return;
+        }
+        console.log("Failed all ports. Trying again in 10 seconds...");
         setTimeout(() => {
+          this.retryCount++;
           this.queuedForReconnect = false;
           this.connect(PORT_RANGES[0]);
-        }, 2000)
+        }, 10000)
         return;
       }
       console.log("Failed, trying next port...");
@@ -102,3 +110,81 @@ const safeParseJson = (str) => {
     return null;
   }
 };
+
+
+
+
+const extensionId = chrome.runtime.id;
+
+const toastsContainerId = extensionId + "-toasts";
+
+const getToastContainer = () => {
+  const existingContainer = document.getElementById(toastsContainerId);
+  if (existingContainer) return existingContainer;
+  const newContainer = document.createElement("div");
+
+  newContainer.id = toastsContainerId;
+  newContainer.style.position = "fixed";
+
+
+  newContainer.style.display = "flex";
+  newContainer.style.flexDirection = "column";
+  newContainer.style.gap = "6px";
+
+
+
+  newContainer.style.top = "10px";
+  newContainer.style.right = "10px";
+  newContainer.style.color = "white";
+  newContainer.style.zIndex = "11111111111111111111111";
+  
+  document.body.appendChild(newContainer);
+
+
+
+  return newContainer;
+}
+
+
+const createToastElement = (text) => {
+  const toastElement = document.createElement("div");
+  toastElement.classList.add("toast");
+  
+  toastElement.style.display = "flex";
+  toastElement.style.alignItems = "center";
+
+
+  toastElement.style.background = "#3a3e43";
+  toastElement.style.borderRadius = "6px";
+  
+  toastElement.style.paddingLeft = "16px";
+  toastElement.style.height = "36px";
+  toastElement.style.width = "200px";
+  toastElement.style.fontSize = "14px";
+  toastElement.style.boxShadow = "0 0 8px 4px rgba(0,0,0,0.4)";
+  
+  toastElement.innerHTML = `
+    <div style="position: absolute; left: 0; width: 4px; border-radius: 99px; height: 16px; background: red;"></div>
+    ${text}
+  `;
+
+  return toastElement;
+}
+
+
+const addToast = () => {
+  const container = getToastContainer();
+  const toastElement = createToastElement("Test!");
+
+  container.appendChild(toastElement);
+  // setTimeout(() => {
+  //   container.removeChild(toastElement);
+  // }, 3000);
+
+}
+
+// setTimeout(() => {
+//   addToast()
+//   addToast()
+//   addToast()
+// }, 100);
