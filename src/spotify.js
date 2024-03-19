@@ -37,7 +37,7 @@ const main = async () => {
       let prevPosition = hmsToMilliseconds(playbackPosEl.textContent);
       const playbackPosObserver = new MutationObserver(
         throttleFunction((mutations) => {
-          if (mutations[0].attributeName === "data-test-position") {
+          if (mutations[0].attributeName === "class") {
             const newPosition = hmsToMilliseconds(playbackPosEl.textContent);
             const difference = Math.abs(newPosition - prevPosition);
             prevPosition = newPosition;
