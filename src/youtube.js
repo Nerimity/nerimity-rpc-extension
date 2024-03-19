@@ -5,12 +5,17 @@ mainScript.src = chrome.runtime.getURL("youtube_inject.js");
 
 const main = async () => {
   const { WebSocketRPC } = await import("./WebSocketRPC.js");
+  const { ExtensionRPC } = await import("./ExtensionRPC.js");
   const {secondsToMilliseconds} = await import("./utils.js");
+  const {getConnectionMethod} = await import("./options.js");
+  
   
 
   let lastData = null;
 
-  const rpc = new WebSocketRPC("1484242629762916352");
+  const method = await getConnectionMethod();
+
+  const rpc = new (method === "BROWSER" ? ExtensionRPC : WebSocketRPC)("1484242629762916352");
 
   rpc.connect();
 

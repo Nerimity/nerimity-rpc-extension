@@ -1,5 +1,7 @@
 const main = async () => {
   const { WebSocketRPC } = await import("./WebSocketRPC.js");
+  const { ExtensionRPC } = await import("./ExtensionRPC.js");
+  const {getConnectionMethod} = await import("./options.js");
   const {sleep, hmsToMilliseconds, throttleFunction} = await import("./utils.js");
 
   /**
@@ -121,7 +123,9 @@ const main = async () => {
     }
   }
 
-  const rpc = new WebSocketRPC("1484242629762916352");
+  const method = await getConnectionMethod();
+
+  const rpc = new (method === "BROWSER" ? ExtensionRPC : WebSocketRPC)("1484242629762916352");
   const readyWidget = await spotifyReady();
 
   const spotify = new Spotify(readyWidget);

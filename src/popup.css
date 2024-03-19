@@ -1,12 +1,18 @@
 html, body {
   background-color: #232629;
   width: 340px;
-  height: 400px;
+  height: 460px;
   color: white;
   font-family: Arial, Helvetica, sans-serif;
   margin: 0;
   padding: 0;
   user-select: none;
+}
+.title {
+  margin-left: 10px;
+  margin-bottom: 4px;
+  font-weight: bold;
+  font-size: 12px;
 }
 
 body {
@@ -33,15 +39,14 @@ body {
 }
 
 
-#rpc-items {
+#rpc-items,
+#rpc-method-items {
   display: flex;
   flex-direction: column;
-  overflow: hidden;
   gap: 6px;
   margin-left: 10px;
   margin-right: 10px;
-
-
+  margin-bottom: 16px;
 }
 
 .rpc-item {
@@ -59,6 +64,7 @@ body {
   padding-right: 16px;
   transition: 0.2s;
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 .rpc-item:hover {
@@ -97,6 +103,7 @@ body {
   margin-left: 10px;
   margin-right: 10px;
   margin-bottom: 6px;
+  flex-shrink: 0;
 }
 
 .rpc-notice {
@@ -105,4 +112,5 @@ body {
   border: solid 1px #e8a859;
   border-radius: 8px;
   background: #3a3229fc;
+  flex-shrink: 0;
 }

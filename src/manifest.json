@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "permissions": ["tabs"],
+  "permissions": ["tabs", "storage"],
   "name": "Nerimity RPC",
   "version": "0.1.1",
   "description": "Share your Spotify or YouTube progress with people on Nerimity!",
@@ -15,18 +15,22 @@
   },
   "web_accessible_resources": [
     {
-      "matches": ["https://open.spotify.com/*", "https://*.youtube.com/*"],
+      "matches": ["https://open.spotify.com/*"],
       "resources": [
         "WebSocketRPC.js",
+        "ExtensionRPC.js",
+        "options.js",
         "utils.js",
         "spotify.js"
       ]
     },
     {
-      "matches": ["https://open.spotify.com/*", "https://*.youtube.com/*"],
+      "matches": ["https://*.youtube.com/*"],
       "resources": [
         "WebSocketRPC.js",
+        "ExtensionRPC.js",
         "utils.js",
+        "options.js",
         "youtube.js",
         "youtube_inject.js"
       ]
@@ -38,6 +42,15 @@
       "js": ["content.js"],
       "run_at": "document_start",
       "matches": ["https://open.spotify.com/*", "https://*.youtube.com/*"]
+    },
+    {
+      "js": ["nerimity_content.js"],
+      "run_at": "document_start",
+      "matches": ["https://nerimity.com/*", "http://local.nerimity.com/*"]
     }
-  ]
+  ],
+  "background": {
+      "service_worker": "service_worker.js"
+  }
+  
 }
