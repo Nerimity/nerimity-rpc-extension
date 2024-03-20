@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "permissions": ["tabs", "storage"],
+  "permissions": ["storage"],
   "name": "Nerimity RPC",
   "version": "0.1.1",
   "description": "Share your Spotify or YouTube progress with people on Nerimity!",
