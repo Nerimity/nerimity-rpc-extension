@@ -3,7 +3,7 @@
   "permissions": ["storage"],
   "name": "Nerimity RPC",
   "version": "0.1.1",
-  "description": "Share your Spotify or YouTube progress with people on Nerimity!",
+  "description": "Share your Spotify or YouTube details with users on Nerimity!",
   "action": {
     "default_popup": "popup.html"
   },
