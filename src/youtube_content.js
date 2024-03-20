@@ -7,7 +7,12 @@ const main = async () => {
   const { WebSocketRPC } = await import("./WebSocketRPC.js");
   const { ExtensionRPC } = await import("./ExtensionRPC.js");
   const {secondsToMilliseconds} = await import("./utils.js");
-  const {getConnectionMethod} = await import("./options.js");
+  const {getConnectionMethod, getDisabledActivities, ACTIVITY} = await import("./options.js");
+
+
+  const disabledActivities = await getDisabledActivities();
+
+  if (disabledActivities.includes(ACTIVITY.YOUTUBE)) return;
   
   
 

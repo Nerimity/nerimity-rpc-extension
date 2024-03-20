@@ -1,8 +1,13 @@
 const main = async () => {
   const { WebSocketRPC } = await import("./WebSocketRPC.js");
   const { ExtensionRPC } = await import("./ExtensionRPC.js");
-  const {getConnectionMethod} = await import("./options.js");
+  const {getConnectionMethod, getDisabledActivities, ACTIVITY} = await import("./options.js");
   const {sleep, hmsToMilliseconds, throttleFunction} = await import("./utils.js");
+
+  
+  const disabledActivities = await getDisabledActivities();
+
+  if (disabledActivities.includes(ACTIVITY.SPOTIFY)) return;
 
   /**
    * @return {Promise<HTMLElement>} The now playing widget element

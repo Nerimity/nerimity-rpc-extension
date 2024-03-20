@@ -20,8 +20,7 @@
         "WebSocketRPC.js",
         "ExtensionRPC.js",
         "options.js",
-        "utils.js",
-        "spotify.js"
+        "utils.js"
       ]
     },
     {
@@ -29,9 +28,8 @@
       "resources": [
         "WebSocketRPC.js",
         "ExtensionRPC.js",
-        "utils.js",
         "options.js",
-        "youtube.js",
+        "utils.js",
         "youtube_inject.js"
       ]
     }
@@ -39,9 +37,14 @@
 
   "content_scripts": [
     {
-      "js": ["content.js"],
+      "js": ["youtube_content.js"],
       "run_at": "document_start",
-      "matches": ["https://open.spotify.com/*", "https://*.youtube.com/*"]
+      "matches": [ "https://*.youtube.com/*"]
+    },
+    {
+      "js": ["spotify_content.js"],
+      "run_at": "document_start",
+      "matches": ["https://open.spotify.com/*"]
     },
     {
       "js": ["nerimity_content.js"],
