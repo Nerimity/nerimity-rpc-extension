@@ -43,6 +43,8 @@ const main = async () => {
     }
     clearTimeout(pauseTimeoutId);
 
+    if (!data.duration) return;
+
     rpc.request({
       name: "YouTube",
       action: "Watching",
