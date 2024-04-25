@@ -44,6 +44,12 @@ rpcMethodItems.addEventListener("click", (e) => {
 
   showNotice("reload", "Changes will take effect after reloading the page.");
 
+  if (rpcId === "RPC_SERVER" && isBrave) {
+    showNotice("brave", `Brave Users: You must allow localhost access for this extension to work. <a href="https://github.com/Nerimity/nerimity-rpc-extension/blob/main/README.md#brave-browser-rpc-server">Click here to learn more.</a>`);
+  } else {
+    hideNotice("brave");
+  }
+
 
 })
 
@@ -94,13 +100,19 @@ const showNotice = (id, message) => {
   noticeContainer.id = "notice-" + id;
 
   noticeContainer.className = "rpc-notice";
-  noticeContainer.innerText = message;
+  noticeContainer.innerHTML = message;
 
   if (!existingContainer) {
     noticeItemsContainer.appendChild(noticeContainer);
   }
 };
 
+const hideNotice = (id) => {
+  const existingContainer = document.getElementById("notice-" + id);
+  if (existingContainer) {
+    existingContainer.remove();
+  }
+};
 
 
 const addRPCItems = async () => {
@@ -113,6 +125,11 @@ const addRPCItems = async () => {
 
 const addMethods = async () => {
   const method = await getConnectionMethod();
+
+  if (isBrave && method === "RPC_SERVER") {
+    showNotice("brave", `Brave Users: You must allow localhost access for this extension to work. <a target="_blank" rel="noopener noreferrer" href="https://github.com/Nerimity/nerimity-rpc-extension/blob/main/README.md#brave-browser-rpc-server">Click here to learn more.</a>`);
+  }
+
   addMethodItem("Browser RPC", "BROWSER", "Connect to an opened Nerimity tab in browser.", method === "BROWSER")
   addMethodItem("RPC Server", "RPC_SERVER", "Connect to the Nerimity Desktop app using RPC.", method === "RPC_SERVER")
 }
@@ -121,6 +138,3 @@ addMethods();
 addRPCItems();
 
 
-if (isBrave) {
-  showNotice("brave", "Brave Users: You must disable Brave Shields in order to use this extension!");
-}

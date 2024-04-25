@@ -107,10 +107,12 @@ body {
 }
 
 .rpc-notice {
-  display: flex;
   padding: 6px;
   border: solid 1px #e8a859;
   border-radius: 8px;
   background: #3a3229fc;
   flex-shrink: 0;
+}
+a {
+  color: rgb(94, 110, 255);
 }
