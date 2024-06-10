@@ -30,7 +30,7 @@ const main = async () => {
       const playButtonEl = document.querySelector(
         "[data-testid=control-button-playpause]"
       );
-      const playbackBarEl = document.querySelector(".playback-bar");
+      const playbackBarEl = document.querySelector("[data-testid=progress-bar]");
       const playbackPosEl = document.querySelector(
         "[data-testid=playback-position]"
       );
