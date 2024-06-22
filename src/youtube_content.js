@@ -34,7 +34,7 @@ const main = async () => {
 
   const makeRequest = (data, force = false) => {
     if (!force && compareJSON(lastData, data)) return;
-
+    
     if (data?.paused || !data) {
       pauseTimeoutId = setTimeout(() => {
         rpc.request(undefined);
@@ -42,12 +42,14 @@ const main = async () => {
       return 
     }
     clearTimeout(pauseTimeoutId);
-
+    
     if (!data.duration) return;
-
+    
+    const isYTMusic = location.href.startsWith("https://music.youtube.com");
+    
     rpc.request({
-      name: "YouTube",
-      action: "Watching",
+      name: isYTMusic ? "YT Music" : "YouTube",
+      action: isYTMusic ? "Listening to" :"Watching",
       imgSrc: data.thumbnailUrl,
       title: data.title,
       link: data.url,

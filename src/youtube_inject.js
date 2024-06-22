@@ -67,11 +67,14 @@ const main = async () => {
 
     const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`
 
+    const isYTMusic = location.href.startsWith("https://music.youtube.com");
+
+
     const res = {
       channelName: ogDetails.authorName,
       title: ogDetails.title,
       thumbnailUrl,
-      url: "https://www.youtube.com/watch?v=" + videoId
+      url: `https://${isYTMusic ? "music." : ""}youtube.com/watch?v=` + videoId
     }
   
     return res;
