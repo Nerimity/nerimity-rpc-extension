@@ -1,5 +1,5 @@
 # nerimity-rpc-extension
-Chrome extension for Nerimity RPC
+Chrome/Firefox extension for Nerimity RPC
 
 
 # Brave Browser RPC Server
