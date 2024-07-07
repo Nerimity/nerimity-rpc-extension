@@ -1,8 +1,8 @@
 const main = async () => {
-  const { WebSocketRPC } = await import("./WebSocketRPC.js");
-  const { ExtensionRPC } = await import("./ExtensionRPC.js");
-  const {getConnectionMethod, getDisabledActivities, ACTIVITY} = await import("./options.js");
-  const {sleep, hmsToMilliseconds, throttleFunction} = await import("./utils.js");
+  const { WebSocketRPC } = await import(chrome.runtime.getURL("./WebSocketRPC.js"));
+  const { ExtensionRPC } = await import(chrome.runtime.getURL("./ExtensionRPC.js"));
+  const {getConnectionMethod, getDisabledActivities, ACTIVITY} = await import(chrome.runtime.getURL("./options.js"));
+  const {sleep, hmsToMilliseconds, throttleFunction} = await import(chrome.runtime.getURL("./utils.js"));
 
   
   const disabledActivities = await getDisabledActivities();

@@ -4,10 +4,10 @@ mainScript.src = chrome.runtime.getURL("youtube_inject.js");
 
 
 const main = async () => {
-  const { WebSocketRPC } = await import("./WebSocketRPC.js");
-  const { ExtensionRPC } = await import("./ExtensionRPC.js");
-  const {secondsToMilliseconds} = await import("./utils.js");
-  const {getConnectionMethod, getDisabledActivities, ACTIVITY} = await import("./options.js");
+  const { WebSocketRPC } = await import(chrome.runtime.getURL("./WebSocketRPC.js"));
+  const { ExtensionRPC } = await import(chrome.runtime.getURL("./ExtensionRPC.js"));
+  const {secondsToMilliseconds} = await import(chrome.runtime.getURL("./utils.js"));
+  const {getConnectionMethod, getDisabledActivities, ACTIVITY} = await import(chrome.runtime.getURL("./options.js"));
 
 
   const disabledActivities = await getDisabledActivities();
