@@ -42,6 +42,7 @@ export class WebSocketRPC {
     };
 
     this.ws.onclose = (event) => {
+      clearTimeout(this.greetedTimeoutId);
       this.tryNextPort(port);
     }
   }
