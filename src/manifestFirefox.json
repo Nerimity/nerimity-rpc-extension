@@ -32,6 +32,15 @@
         "utils.js",
         "youtube_inject.js"
       ]
+    },
+    {
+      "matches": ["https://atomic.radio/*"],
+      "resources": [
+        "WebSocketRPC.js",
+        "ExtensionRPC.js",
+        "options.js",
+        "utils.js"
+      ]
     }
   ],
 
@@ -50,6 +59,11 @@
       "js": ["nerimity_content.js"],
       "run_at": "document_start",
       "matches": ["https://nerimity.com/*", "http://local.nerimity.com/*"]
+    },
+    {
+      "js": ["atomicradio_content.js"],
+      "run_at": "document_start",
+      "matches": ["https://atomic.radio/*"]
     }
   ],
   "background": {

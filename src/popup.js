@@ -120,6 +120,7 @@ const addRPCItems = async () => {
   
   addRPCItem("SPOTIFY", "Spotify", "spotify.svg","Share music details and progress on Nerimity!", !disabledActivities.includes("SPOTIFY"));
   addRPCItem("YOUTUBE", "YouTube", "youtube.svg","Share video details and progress on Nerimity!", !disabledActivities.includes("YOUTUBE"));
+  addRPCItem("ATOMICRADIO", "atomictadio", "atomicradio_logo.png","Share which space and song you're hearing to on Nerimity!", !disabledActivities.includes("ATOMICRADIO"));
 }
 
 

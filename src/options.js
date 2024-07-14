@@ -6,6 +6,7 @@ export const CONNECTION_METHOD = {
 export const ACTIVITY = {
   SPOTIFY: "SPOTIFY",
   YOUTUBE: "YOUTUBE",
+  ATOMICRADIO: "ATOMICRADIO",
 }
 
 /**
