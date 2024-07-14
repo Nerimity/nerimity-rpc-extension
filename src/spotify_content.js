@@ -108,8 +108,6 @@ const main = async () => {
   
       const link = titleEl.href;
       const isPlaying = state.getAttribute("aria-label") === "Pause";
-
-      console.log(duration)
   
       return {
         title: titleEl.textContent,
