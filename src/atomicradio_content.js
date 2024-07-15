@@ -89,8 +89,8 @@ const main = async () => {
       const endingAt = Date.parse(trackData.endingAt);
       const startingAt = Date.parse(trackData.startingAt);
       var title = trackData.title;
-      title = title.length >= 30 ? title.slice(0, 28) + ".." : title;
-      artists = artists.length >= 30 ? artists.slice(0, 28) + ".." : artists;
+      title = title.length > 30 ? title.slice(0, 28) + ".." : title;
+      artists = artists.length > 30 ? artists.slice(0, 28) + ".." : artists;
       const link = `https://atomic.radio/${space.textContent}`;
       const isPlaying = !!document.querySelector("#play-button");
 
