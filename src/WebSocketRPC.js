@@ -87,10 +87,17 @@ export class WebSocketRPC {
     if (this.ws.readyState !== WebSocket.OPEN) {
       return;
     }
+    const clonedOpts = { ...opts };
+    if (clonedOpts.title) {
+      clonedOpts.title = overflowEllipsis(clonedOpts.title);
+    }
+    if (clonedOpts.subtitle) {
+      clonedOpts.subtitle = overflowEllipsis(clonedOpts.subtitle);
+    }
     this.ws.send(
       JSON.stringify({
         name: "UPDATE_RPC",
-        data: opts,
+        data: clonedOpts,
       })
     );
   }
@@ -103,6 +110,11 @@ export class WebSocketRPC {
   }
 
 }
+
+const overflowEllipsis = (str, maxLength = 30) => {
+  if (str.length <= maxLength) return str;
+  return str.substring(0, maxLength - 3) + "...";
+};
 
 const safeParseJson = (str) => {
   try {
