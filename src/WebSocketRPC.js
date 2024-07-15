@@ -87,11 +87,11 @@ export class WebSocketRPC {
     if (this.ws.readyState !== WebSocket.OPEN) {
       return;
     }
-    const clonedOpts = { ...opts };
-    if (clonedOpts.title) {
+    const clonedOpts = opts ? { ...opts } : undefined;
+    if (clonedOpts?.title) {
       clonedOpts.title = overflowEllipsis(clonedOpts.title);
     }
-    if (clonedOpts.subtitle) {
+    if (clonedOpts?.subtitle) {
       clonedOpts.subtitle = overflowEllipsis(clonedOpts.subtitle);
     }
     this.ws.send(
