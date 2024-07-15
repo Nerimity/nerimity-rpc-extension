@@ -82,15 +82,15 @@ const main = async () => {
     }
     getPlayingTrack() {
       const trackData = JSON.parse(localStorage.getItem("currentTrack"));
-      console.log(trackData);
-      const artists = trackData.artist;
+      var artists = trackData.artist;
       const artwork = trackData.artwork;
       const duration = Date.parse(trackData.duration);
       const space = document.querySelector("#spaceId");
       const endingAt = Date.parse(trackData.endingAt);
       const startingAt = Date.parse(trackData.startingAt);
-      const title = trackData.title;
-
+      var title = trackData.title;
+      title = title.length >= 28 ? title.slice(0, 28) + ".." : title;
+      artists = artists.length >= 28 ? artists.slice(0, 28) + ".." : artists;
       const link = `https://atomic.radio/${space.textContent}`;
       const isPlaying = !!document.querySelector("#play-button");
 
