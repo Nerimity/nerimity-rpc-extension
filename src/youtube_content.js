@@ -67,10 +67,11 @@ const main = async () => {
       subtitle: data.channelName,
       startedAt: Date.now() - secondsToMilliseconds(data.currentTime),
       speed: data.speed,
-      endsAt:
-        Date.now() -
-        secondsToMilliseconds(data.currentTime) +
-        secondsToMilliseconds(data.duration),
+      endsAt: data.liveStream
+        ? undefined
+        : Date.now() -
+          secondsToMilliseconds(data.currentTime) +
+          secondsToMilliseconds(data.duration),
     });
   };
 

@@ -95,6 +95,9 @@ export class WebSocketRPC {
     if (clonedOpts?.subtitle) {
       clonedOpts.subtitle = overflowEllipsis(clonedOpts.subtitle);
     }
+    if (clonedOpts) {
+      clonedOpts.updatedAt = Date.now();
+    }
     this.ws.send(
       JSON.stringify({
         name: "UPDATE_RPC",

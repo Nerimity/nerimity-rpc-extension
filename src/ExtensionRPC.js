@@ -30,9 +30,20 @@ export class ExtensionRPC {
    * } | undefined} opts - the options for the request
    */
   request(opts) {
+    const clonedOpts = opts ? { ...opts } : undefined;
+    if (clonedOpts?.title) {
+      clonedOpts.title = overflowEllipsis(clonedOpts.title);
+    }
+    if (clonedOpts?.subtitle) {
+      clonedOpts.subtitle = overflowEllipsis(clonedOpts.subtitle);
+    }
+    if (clonedOpts) {
+      clonedOpts.updatedAt = Date.now();
+    }
+
     this.port.postMessage({
       name: "UPDATE_RPC",
-      data: opts,
+      data: clonedOpts,
     });
   }
 
@@ -43,3 +54,8 @@ export class ExtensionRPC {
     this.events?.[event]?.(data);
   }
 }
+
+const overflowEllipsis = (str, maxLength = 30) => {
+  if (str.length <= maxLength) return str;
+  return str.substring(0, maxLength - 3) + "...";
+};

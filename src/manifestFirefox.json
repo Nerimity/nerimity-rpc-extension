@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "permissions": ["storage"],
   "name": "Nerimity RPC",
-  "version": "0.2.4",
+  "version": "0.2.6",
   "description": "Share your playing Spotify music or YouTube video details with users on Nerimity!",
   "action": {
     "default_popup": "popup.html"
