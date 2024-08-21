@@ -35,7 +35,7 @@ export class WebSocketRPC {
         this.greeted = true;
         this.ws.send(JSON.stringify({ name: "HELLO_NERIMITY_RPC" }));
         console.log("Received HELLO_NERIMITY_RPC");
-        this.emit("ready")
+        this.emit("ready");
         return;
       }
       if (!this.greeted) return;
@@ -44,7 +44,7 @@ export class WebSocketRPC {
     this.ws.onclose = (event) => {
       clearTimeout(this.greetedTimeoutId);
       this.tryNextPort(port);
-    }
+    };
   }
   tryNextPort(currentPort) {
     if (this.queuedForReconnect) return;
@@ -63,7 +63,7 @@ export class WebSocketRPC {
           this.retryCount++;
           this.queuedForReconnect = false;
           this.connect(PORT_RANGES[0]);
-        }, 10000)
+        }, 10000);
         return;
       }
       console.log("Failed, trying next port...");
@@ -81,6 +81,7 @@ export class WebSocketRPC {
    *   imgSrc?: string,
    *   startedAt?: number,
    *   endsAt?: number
+   *   speed?: number
    * } | undefined} opts - the options for the request
    */
   request(opts) {
@@ -104,11 +105,10 @@ export class WebSocketRPC {
 
   on(event, callback) {
     this.events[event] = callback;
-}
-  emit(event, data) {
-      this.events?.[event]?.(data);
   }
-
+  emit(event, data) {
+    this.events?.[event]?.(data);
+  }
 }
 
 const overflowEllipsis = (str, maxLength = 30) => {
@@ -124,9 +124,6 @@ const safeParseJson = (str) => {
   }
 };
 
-
-
-
 const extensionId = chrome.runtime.id;
 
 const toastsContainerId = extensionId + "-toasts";
@@ -139,51 +136,43 @@ const getToastContainer = () => {
   newContainer.id = toastsContainerId;
   newContainer.style.position = "fixed";
 
-
   newContainer.style.display = "flex";
   newContainer.style.flexDirection = "column";
   newContainer.style.gap = "6px";
-
-
 
   newContainer.style.top = "10px";
   newContainer.style.right = "10px";
   newContainer.style.color = "white";
   newContainer.style.zIndex = "11111111111111111111111";
-  
+
   document.body.appendChild(newContainer);
 
-
-
   return newContainer;
-}
-
+};
 
 const createToastElement = (text) => {
   const toastElement = document.createElement("div");
   toastElement.classList.add("toast");
-  
+
   toastElement.style.display = "flex";
   toastElement.style.alignItems = "center";
 
-
   toastElement.style.background = "#3a3e43";
   toastElement.style.borderRadius = "6px";
-  
+
   toastElement.style.paddingLeft = "16px";
   toastElement.style.height = "36px";
   toastElement.style.width = "200px";
   toastElement.style.fontSize = "14px";
   toastElement.style.boxShadow = "0 0 8px 4px rgba(0,0,0,0.4)";
-  
+
   toastElement.innerHTML = `
     <div style="position: absolute; left: 0; width: 4px; border-radius: 99px; height: 16px; background: red;"></div>
     ${text}
   `;
 
   return toastElement;
-}
-
+};
 
 const addToast = () => {
   const container = getToastContainer();
@@ -193,8 +182,7 @@ const addToast = () => {
   // setTimeout(() => {
   //   container.removeChild(toastElement);
   // }, 3000);
-
-}
+};
 
 // setTimeout(() => {
 //   addToast()

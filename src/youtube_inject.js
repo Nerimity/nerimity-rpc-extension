@@ -44,11 +44,7 @@ const main = async () => {
     videoEl.onratechange = async () => {
       dispatchEvent(await makeEvent());
     };
-    player.on("timeupdate", async (e) => {
-      if (videoEl.currentTime === 0) {
-        dispatchEvent(await makeEvent());
-      }
-    });
+
     dispatchEvent(await makeEvent());
   };
 

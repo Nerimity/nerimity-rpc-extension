@@ -1,4 +1,3 @@
-
 export class ExtensionRPC {
   constructor(appId) {
     this.port = null;
@@ -7,20 +6,16 @@ export class ExtensionRPC {
     this.appId = appId;
 
     this.events = {};
-
-
   }
   connect() {
-    this.port = chrome.runtime.connect({name: "rpc_client"});
+    this.port = chrome.runtime.connect({ name: "rpc_client" });
 
-    this.port.onMessage.addListener(msg => {
+    this.port.onMessage.addListener((msg) => {
       if (msg.name === "connected") {
         this.emit("ready");
-      }      
+      }
     });
-
   }
-
 
   /**
    * @param {{
@@ -30,7 +25,8 @@ export class ExtensionRPC {
    *   subtitle?: string,
    *   imgSrc?: string,
    *   startedAt?: number,
-   *   endsAt?: number
+   *   endsAt?: number,
+   *   speed?: number
    * } | undefined} opts - the options for the request
    */
   request(opts) {
@@ -42,9 +38,8 @@ export class ExtensionRPC {
 
   on(event, callback) {
     this.events[event] = callback;
-}
-  emit(event, data) {
-      this.events?.[event]?.(data);
   }
-
+  emit(event, data) {
+    this.events?.[event]?.(data);
+  }
 }
