@@ -66,6 +66,7 @@ const main = async () => {
       link: data.url,
       subtitle: data.channelName,
       startedAt: Date.now() - secondsToMilliseconds(data.currentTime),
+      speed: data.speed,
       endsAt:
         Date.now() -
         secondsToMilliseconds(data.currentTime) +

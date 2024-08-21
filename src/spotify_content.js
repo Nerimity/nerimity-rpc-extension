@@ -1,10 +1,17 @@
 const main = async () => {
-  const { WebSocketRPC } = await import(chrome.runtime.getURL("./WebSocketRPC.js"));
-  const { ExtensionRPC } = await import(chrome.runtime.getURL("./ExtensionRPC.js"));
-  const {getConnectionMethod, getDisabledActivities, ACTIVITY} = await import(chrome.runtime.getURL("./options.js"));
-  const {sleep, hmsToMilliseconds, throttleFunction} = await import(chrome.runtime.getURL("./utils.js"));
+  const { WebSocketRPC } = await import(
+    chrome.runtime.getURL("./WebSocketRPC.js")
+  );
+  const { ExtensionRPC } = await import(
+    chrome.runtime.getURL("./ExtensionRPC.js")
+  );
+  const { getConnectionMethod, getDisabledActivities, ACTIVITY } = await import(
+    chrome.runtime.getURL("./options.js")
+  );
+  const { sleep, hmsToMilliseconds, throttleFunction } = await import(
+    chrome.runtime.getURL("./utils.js")
+  );
 
-  
   const disabledActivities = await getDisabledActivities();
 
   if (disabledActivities.includes(ACTIVITY.SPOTIFY)) return;
@@ -23,38 +30,35 @@ const main = async () => {
     return nowPlayingWidget;
   };
 
-
   class Spotify {
     constructor(widgetEl) {
       this.checkForChanges();
+
       const playButtonEl = document.querySelector(
         "[data-testid=control-button-playpause]"
       );
-      const playbackBarEl = document.querySelector("[data-testid=progress-bar]");
+
       const playbackPosEl = document.querySelector(
         "[data-testid=playback-position]"
       );
-  
+
+      let prevPosition = hmsToMilliseconds(playbackPosEl.textContent);
+
+      setInterval(() => {
+        const newPosition = hmsToMilliseconds(playbackPosEl.textContent);
+        const difference = Math.abs(newPosition - prevPosition);
+        prevPosition = newPosition;
+        if (difference > 1400) {
+          this.checkForChanges(true);
+        }
+      }, 1000);
+
       const linkChangeObserver = new MutationObserver(
         throttleFunction(() => {
           this.checkForChanges();
         }, 10)
       );
-  
-      let prevPosition = hmsToMilliseconds(playbackPosEl.textContent);
-      const playbackPosObserver = new MutationObserver(
-        throttleFunction((mutations) => {
-          if (mutations[0].attributeName === "class") {
-            const newPosition = hmsToMilliseconds(playbackPosEl.textContent);
-            const difference = Math.abs(newPosition - prevPosition);
-            prevPosition = newPosition;
-            if (difference > 1400) {
-              this.checkForChanges(true);
-            }
-          }
-        }, 10)
-      );
-  
+
       linkChangeObserver.observe(widgetEl, {
         subtree: true,
         attributes: true,
@@ -65,23 +69,20 @@ const main = async () => {
         attributes: true,
         childList: true,
       });
-      playbackPosObserver.observe(playbackBarEl, {
-        subtree: true,
-        attributes: true,
-        childList: false,
-      });
-  
+
       this.beforePlaying = null;
-  
+
       this.events = {};
     }
     async checkForChanges(seeked = false) {
       await sleep(100);
-      const before = !this.beforePlaying ? undefined : { ...this.beforePlaying };
+      const before = !this.beforePlaying
+        ? undefined
+        : { ...this.beforePlaying };
       this.beforePlaying = this.getPlayingTrack();
-  
+
       if (!before) return;
-  
+
       if (
         before?.title + before?.artists !==
         this.beforePlaying?.title + this.beforePlaying?.artists
@@ -100,15 +101,19 @@ const main = async () => {
         "[data-testid=context-item-info-subtitles]"
       );
       const albumArt = document.querySelector("[data-testid=cover-art-image]");
-      const position = document.querySelector("[data-testid=playback-position]");
-      const duration = document.querySelector("[data-testid=playback-duration]");
+      const position = document.querySelector(
+        "[data-testid=playback-position]"
+      );
+      const duration = document.querySelector(
+        "[data-testid=playback-duration]"
+      );
       const state = document.querySelector(
         "[data-testid=control-button-playpause]"
       );
-  
+
       const link = titleEl.href;
       const isPlaying = state.getAttribute("aria-label") === "Pause";
-  
+
       return {
         title: titleEl.textContent,
         art: albumArt.src,
@@ -119,7 +124,7 @@ const main = async () => {
         isPlaying,
       };
     }
-  
+
     on(event, callback) {
       this.events[event] = callback;
     }
@@ -130,7 +135,9 @@ const main = async () => {
 
   const method = await getConnectionMethod();
 
-  const rpc = new (method === "BROWSER" ? ExtensionRPC : WebSocketRPC)("1484242629762916352");
+  const rpc = new (method === "BROWSER" ? ExtensionRPC : WebSocketRPC)(
+    "1484242629762916352"
+  );
   const readyWidget = await spotifyReady();
 
   const spotify = new Spotify(readyWidget);
