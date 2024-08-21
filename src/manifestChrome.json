@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "permissions": ["storage"],
   "name": "Nerimity RPC",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Share your playing Spotify music or YouTube video details with users on Nerimity!",
   "action": {
     "default_popup": "popup.html"
@@ -48,7 +48,7 @@
     {
       "js": ["youtube_content.js"],
       "run_at": "document_start",
-      "matches": [ "https://*.youtube.com/*"]
+      "matches": ["https://*.youtube.com/*"]
     },
     {
       "js": ["spotify_content.js"],
@@ -67,7 +67,6 @@
     }
   ],
   "background": {
-      "service_worker": "service_worker.js"
+    "service_worker": "service_worker.js"
   }
-  
 }
