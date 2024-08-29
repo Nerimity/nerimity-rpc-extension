@@ -24,7 +24,7 @@ const main = async () => {
     if (!videoEl) return;
 
     const makeEvent = async () => {
-      const live = document.querySelector(".ytp-live-badge").checkVisibility();
+      const live = document.querySelector(".ytp-live-badge")?.checkVisibility();
       const details = await getPlayerDetails();
       return {
         speed: videoEl.playbackRate,
