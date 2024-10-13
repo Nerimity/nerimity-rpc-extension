@@ -41,10 +41,16 @@ const main = async () => {
   let pauseTimeoutId = null;
 
   const makeRequest = async (data, force = false) => {
+    const isYTMusic = location.href.startsWith("https://music.youtube.com");
+
     if (!force && compareJSON(lastData, data)) return;
-    const isWhitelisted =
+    let isWhitelisted =
       data?.channelName &&
       (await isYouTubeChannelWhitelisted(data?.channelName));
+
+    if (isYTMusic) {
+      isWhitelisted = true;
+    }
 
     if (!isWhitelisted || data?.paused || !data) {
       pauseTimeoutId = setTimeout(() => {
@@ -55,8 +61,6 @@ const main = async () => {
     clearTimeout(pauseTimeoutId);
 
     if (!data.duration) return;
-
-    const isYTMusic = location.href.startsWith("https://music.youtube.com");
 
     rpc.request({
       name: isYTMusic ? "YT Music" : "YouTube",

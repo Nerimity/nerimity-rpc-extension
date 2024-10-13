@@ -144,6 +144,12 @@ const main = async () => {
   rpc.connect();
 
   const makeRequest = (data) => {
+    const position = hmsToMilliseconds(data.position);
+    let realDuration = hmsToMilliseconds(data.duration);
+    if (data.duration.startsWith("-")) {
+      realDuration = hmsToMilliseconds(data.duration.substring(1));
+      realDuration = realDuration + position;
+    }
     rpc.request({
       name: "Spotify",
       action: "Listening to",
@@ -152,10 +158,7 @@ const main = async () => {
       link: data.link,
       subtitle: data.artists,
       startedAt: Date.now() - hmsToMilliseconds(data.position),
-      endsAt:
-        Date.now() -
-        hmsToMilliseconds(data.position) +
-        hmsToMilliseconds(data.duration),
+      endsAt: Date.now() - position + realDuration,
     });
   };
 
