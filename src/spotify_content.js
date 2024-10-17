@@ -96,7 +96,7 @@ const main = async () => {
       }
     }
     getPlayingTrack() {
-      const titleEl = document.querySelector("[data-testid=context-item-link");
+      const titleEl = document.querySelector("[data-testid=context-item-link]");
       const artists = document.querySelector(
         "[data-testid=context-item-info-subtitles]"
       );
