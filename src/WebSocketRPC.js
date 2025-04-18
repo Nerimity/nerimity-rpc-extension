@@ -90,10 +90,10 @@ export class WebSocketRPC {
     }
     const clonedOpts = opts ? { ...opts } : undefined;
     if (clonedOpts?.title) {
-      clonedOpts.title = overflowEllipsis(clonedOpts.title);
+      clonedOpts.title = clonedOpts.title;
     }
     if (clonedOpts?.subtitle) {
-      clonedOpts.subtitle = overflowEllipsis(clonedOpts.subtitle);
+      clonedOpts.subtitle = clonedOpts.subtitle;
     }
     if (clonedOpts) {
       clonedOpts.updatedAt = Date.now();
@@ -114,10 +114,6 @@ export class WebSocketRPC {
   }
 }
 
-const overflowEllipsis = (str, maxLength = 30) => {
-  if (str.length <= maxLength) return str;
-  return str.substring(0, maxLength - 3) + "...";
-};
 
 const safeParseJson = (str) => {
   try {
