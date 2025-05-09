@@ -58,3 +58,35 @@ chrome.runtime.onConnect.addListener(function (port) {
     });
   }
 });
+
+
+let popupWindowId = null; 
+
+chrome.windows.onCreated.addListener((window) => {
+  if (window.type === 'popup') {
+    popupWindowId = window.id;
+  }
+});
+
+chrome.windows.onRemoved.addListener((windowId) => {
+  if (windowId === popupWindowId) {
+    popupWindowId = null;
+  }
+});
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === "popup-to-content") {
+    const tabId = request.tabId;
+    chrome.tabs.sendMessage(tabId, {
+      action: "from-popup",
+      data: request.data
+    }).catch(console.log);
+  }
+  if (request.action === "content-to-popup") {
+    chrome.runtime.sendMessage( {
+      action: "from-content",
+      data: request.data
+    }).catch(console.log);
+  }
+});
+

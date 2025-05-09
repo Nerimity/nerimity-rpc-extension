@@ -2,6 +2,7 @@ var mainScript = document.createElement("script");
 mainScript.src = chrome.runtime.getURL("youtube_inject.js");
 (document.head || document.documentElement).appendChild(mainScript);
 
+
 const main = async () => {
   const { WebSocketRPC } = await import(
     chrome.runtime.getURL("./WebSocketRPC.js")
@@ -25,6 +26,26 @@ const main = async () => {
 
   let lastData = null;
 
+  let channelName = "";
+
+  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.action === "from-popup") {
+      const action = request.data.action;
+
+      if (action === "yt-whitelist-updated") {
+        makeRequest(lastData, true);
+      }
+
+      if (action === "popup-opened") {
+        chrome.runtime.sendMessage({
+        action: "content-to-popup",
+        data: { action: "yt-channel-name", channelName },
+      });
+      }
+    }
+  });
+
+
   const method = await getConnectionMethod();
 
   const rpc = new (method === "BROWSER" ? ExtensionRPC : WebSocketRPC)(
@@ -42,6 +63,10 @@ const main = async () => {
 
   const makeRequest = async (data, force = false) => {
     const isYTMusic = location.href.startsWith("https://music.youtube.com");
+
+    if (!isYTMusic) {
+      channelName = data?.channelName || "";
+    }
 
     if (!force && compareJSON(lastData, data)) return;
     let isWhitelisted =

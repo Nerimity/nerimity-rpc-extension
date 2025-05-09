@@ -36,8 +36,7 @@ const main = async () => {
       const playButtonEl = document.querySelector("#play-button");
       const spacedId = document.querySelector("#spaceId");
       const endingAt = document.querySelector("#endingAt");
-      console.log(spacedId.textContent);
-      console.log(endingAt.textContent);
+
 
       const linkChangeObserver = new MutationObserver(
         throttleFunction(() => {

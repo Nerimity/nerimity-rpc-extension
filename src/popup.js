@@ -33,6 +33,41 @@ rpcItemsContainer.addEventListener("click", (e) => {
   showNotice("reload", "Changes will take effect after reloading the page.");
 });
 
+chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  if (tabs && tabs.length > 0) {
+    chrome.runtime
+      .sendMessage({
+        action: "popup-to-content",
+        tabId: tabs[0].id,
+        data: { action: "popup-opened" },
+      })
+      .catch(console.log);
+  }
+});
+
+const sendYoutubeWhitelistUpdated = () => {
+  chrome.tabs.query({}, (tabs) => {
+    tabs.forEach((tab) => {
+      chrome.runtime
+        .sendMessage({
+          action: "popup-to-content",
+          tabId: tab.id,
+          data: { action: "yt-whitelist-updated" },
+        })
+        .catch(console.log);
+    });
+  });
+};
+
+let ytChannelName = "";
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === "content-to-popup") {
+    if (request.data.action === "yt-channel-name") {
+      ytChannelName = request.data.channelName;
+    }
+  }
+});
+
 async function toggleYouTubeSettingsVisibility() {
   const existingContainerEl = document.getElementById(
     "youtube-settings-container"
@@ -50,7 +85,7 @@ async function toggleYouTubeSettingsVisibility() {
     <a href="#" class="back-button">Back</a>
     <div class="settings-title">Whitelist Channels</div>
     <div class="youtube-whitelist-input-container">
-      <input type="text" placeholder="YouTube username" id="youtube-username" />
+      <input type="text" placeholder="YouTube username" id="youtube-username" value="${ytChannelName}" />
       <button id="youtube-add-button">Add</button>
     </div>
     <div id="youtube-channel-list"></div>
@@ -89,8 +124,10 @@ async function toggleYouTubeSettingsVisibility() {
       if (!username) {
         return;
       }
+
       await addYouTubeChannelToWhitelist(username);
       listChannels();
+      sendYoutubeWhitelistUpdated()
     }
     if (e.target.closest(".delete-button")) {
       const item = e.target.closest("#youtube-channel-item");
@@ -99,6 +136,7 @@ async function toggleYouTubeSettingsVisibility() {
       await removeYouTubeChannelFromWhitelist(username);
 
       listChannels();
+      sendYoutubeWhitelistUpdated();
     }
   };
 }
@@ -211,7 +249,7 @@ const addRPCItems = async () => {
   );
   addRPCItem(
     "ATOMICRADIO",
-    "atomictadio",
+    "atomicradio",
     "atomicradio_logo.png",
     "Share which space and song you're hearing to on Nerimity!",
     !disabledActivities.includes("ATOMICRADIO")
