@@ -2,8 +2,8 @@
   "manifest_version": 3,
   "permissions": ["storage"],
   "name": "Nerimity RPC",
-  "version": "0.3.0",
-  "description": "Share your playing Spotify music or YouTube video details with users on Nerimity!",
+  "version": "0.3.1",
+  "description": "Share your playing Spotify music, Media Activity or YouTube video details with users on Nerimity!",
   "action": {
     "default_popup": "popup.html"
   },
@@ -41,9 +41,17 @@
         "options.js",
         "utils.js"
       ]
+    },
+    {
+      "matches": ["<all_urls>"],
+      "resources": [
+        "WebSocketRPC.js",
+        "ExtensionRPC.js",
+        "options.js",
+        "utils.js"
+      ]
     }
   ],
-
   "content_scripts": [
     {
       "js": ["youtube_content.js"],
@@ -56,6 +64,11 @@
       "matches": ["https://open.spotify.com/*"]
     },
     {
+      "js": ["radionet_content.js"],
+      "run_at": "document_start",
+      "matches": ["https://radionet.app/*"]
+    },
+    {
       "js": ["nerimity_content.js"],
       "run_at": "document_start",
       "matches": ["https://nerimity.com/*", "http://local.nerimity.com/*"]
@@ -64,6 +77,11 @@
       "js": ["atomicradio_content.js"],
       "run_at": "document_start",
       "matches": ["https://atomic.radio/*"]
+    },
+    {
+      "js": ["multimedia_content.js"],
+      "run_at": "document_start",
+      "matches": ["<all_urls>"]
     }
   ],
   "background": {
