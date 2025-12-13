@@ -7,6 +7,7 @@ import {
   getYouTubeChannelWhitelist,
   removeYouTubeChannelFromWhitelist,
 } from "./options.js";
+
 const rpcItemsContainer = document.getElementById("rpc-items");
 const rpcMethodItems = document.getElementById("rpc-method-items");
 const noticeItemsContainer = document.getElementById("notice-items");
@@ -127,7 +128,7 @@ async function toggleYouTubeSettingsVisibility() {
 
       await addYouTubeChannelToWhitelist(username);
       listChannels();
-      sendYoutubeWhitelistUpdated()
+      sendYoutubeWhitelistUpdated();
     }
     if (e.target.closest(".delete-button")) {
       const item = e.target.closest("#youtube-channel-item");
@@ -194,7 +195,6 @@ const addRPCItem = (id, title, img, description, checked, settingsIcon) => {
 };
 
 const addMethodItem = (title, id, description, checked = false) => {
-  // <img class="rpc-image" src="${img}" />
   const html = `
   <div class="rpc-item" data-id="${id}">
     <div class="rpc-details">
@@ -253,6 +253,13 @@ const addRPCItems = async () => {
     "atomicradio_logo.png",
     "Share which space and song you're hearing to on Nerimity!",
     !disabledActivities.includes("ATOMICRADIO")
+  );
+  addRPCItem(
+    "MULTIMEDIA",
+    "Multi-Platform Media",
+    "icons/icon48.png",
+    "Share any playing media (audio/video) from most sites!",
+    !disabledActivities.includes("MULTIMEDIA")
   );
 };
 
