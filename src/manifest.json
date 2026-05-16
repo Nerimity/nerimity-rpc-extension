@@ -1,0 +1,101 @@
+{
+  "manifest_version": 3,
+  "permissions": ["storage"],
+  "host_permissions": ["https://kick.com/api/*"],
+  "name": "Nerimity RPC",
+  "version": "0.3.1",
+  "description": "Share your playing Spotify music or YouTube video details with users on Nerimity!",
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "web_accessible_resources": [
+    {
+      "matches": ["https://open.spotify.com/*"],
+      "resources": ["WebSocketRPC.js", "ExtensionRPC.js", "options.js", "utils.js"]
+    },
+    {
+      "matches": ["https://*.youtube.com/*"],
+      "resources": ["WebSocketRPC.js", "ExtensionRPC.js", "options.js", "utils.js", "youtube_inject.js"]
+    },
+    {
+      "matches": ["https://atomic.radio/*"],
+      "resources": ["WebSocketRPC.js", "ExtensionRPC.js", "options.js", "utils.js"]
+    },
+    {
+      "matches": ["https://www.twitch.tv/*"],
+      "resources": ["WebSocketRPC.js", "ExtensionRPC.js", "options.js", "utils.js"]
+    },
+    {
+      "matches": ["https://kick.com/*"],
+      "resources": ["WebSocketRPC.js", "ExtensionRPC.js", "options.js", "utils.js"]
+    },
+    {
+      "matches": ["https://soundcloud.com/*"],
+      "resources": ["WebSocketRPC.js", "ExtensionRPC.js", "options.js", "utils.js"]
+    },
+    {
+      "matches": ["https://www.deezer.com/*"],
+      "resources": ["WebSocketRPC.js", "ExtensionRPC.js", "options.js", "utils.js"]
+    },
+    {
+      "matches": ["https://www.netflix.com/*"],
+      "resources": ["WebSocketRPC.js", "ExtensionRPC.js", "options.js", "utils.js"]
+    }
+  ],
+  "content_scripts": [
+    {
+      "js": ["youtube_content.js"],
+      "run_at": "document_start",
+      "matches": ["https://*.youtube.com/*"]
+    },
+    {
+      "js": ["spotify_content.js"],
+      "run_at": "document_start",
+      "matches": ["https://open.spotify.com/*"]
+    },
+    {
+      "js": ["nerimity_content.js"],
+      "run_at": "document_start",
+      "matches": ["https://nerimity.com/*", "http://local.nerimity.com/*"]
+    },
+    {
+      "js": ["atomicradio_content.js"],
+      "run_at": "document_start",
+      "matches": ["https://atomic.radio/*"]
+    },
+    {
+      "js": ["twitch_content.js"],
+      "run_at": "document_idle",
+      "matches": ["https://www.twitch.tv/*"]
+    },
+    {
+      "js": ["kick_content.js"],
+      "run_at": "document_idle",
+      "matches": ["https://kick.com/*"]
+    },
+    {
+      "js": ["soundcloud_content.js"],
+      "run_at": "document_idle",
+      "matches": ["https://soundcloud.com/*"]
+    },
+    {
+      "js": ["deezer_content.js"],
+      "run_at": "document_idle",
+      "matches": ["https://www.deezer.com/*"]
+    },
+    {
+      "js": ["netflix_content.js"],
+      "run_at": "document_idle",
+      "matches": ["https://www.netflix.com/*"]
+    }
+  ],
+  "background": {
+    "service_worker": "service_worker.js"
+  }
+}

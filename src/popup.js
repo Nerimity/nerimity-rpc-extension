@@ -254,6 +254,41 @@ const addRPCItems = async () => {
     "Share which space and song you're hearing to on Nerimity!",
     !disabledActivities.includes("ATOMICRADIO")
   );
+  addRPCItem(
+    "TWITCH",
+    "Twitch",
+    "twitch.svg",
+    "Share which stream you're watching on Nerimity!",
+    !disabledActivities.includes("TWITCH")
+  );
+  addRPCItem(
+    "KICK",
+    "Kick",
+    "kick.svg",
+    "Share which Kick stream you're watching on Nerimity!",
+    !disabledActivities.includes("KICK")
+  );
+  addRPCItem(
+    "SOUNDCLOUD",
+    "SoundCloud",
+    "soundcloud.svg",
+    "Share music details from SoundCloud on Nerimity!",
+    !disabledActivities.includes("SOUNDCLOUD")
+  );
+  addRPCItem(
+    "DEEZER",
+    "Deezer",
+    "deezer.svg",
+    "Share music details from Deezer on Nerimity!",
+    !disabledActivities.includes("DEEZER")
+  );
+  addRPCItem(
+    "NETFLIX",
+    "Netflix",
+    "netflix.svg",
+    "Share what you're watching on Netflix with Nerimity!",
+    !disabledActivities.includes("NETFLIX")
+  );
 };
 
 const addMethods = async () => {
